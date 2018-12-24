@@ -62,9 +62,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="
-
-"
+        android:text=""
         />
 
     <TextView
@@ -79,9 +77,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="
-
-"
+        android:text=""
         />
 
     <LinearLayout
@@ -92,6 +88,7 @@
         >
 
         <Button
+            android:id="@+id/login_qq"
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:background="@drawable/login_qq"
@@ -109,8 +106,6 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="
-
-"
+        android:text=""
         />
 </LinearLayout>
