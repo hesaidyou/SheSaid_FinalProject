@@ -28,12 +28,51 @@
                 android:hint="说点什么吧.."
                 android:text=""
                 android:textSize="16dp" />
-
             <ImageView
+                android:id="@+id/img_picture"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_gravity="bottom"
                  />
+            <TextView
+                android:id="@+id/text_map"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <Button
+                    android:id="@+id/filter_one"
+                    android:layout_width="80dp"
+                    android:layout_height="40dp"
+                    android:text="灰度"/>
+                <Button
+                    android:id="@+id/filter_two"
+                    android:layout_width="80dp"
+                    android:layout_height="40dp"
+                    android:text="乌墨"/>
+                <Button
+                    android:id="@+id/filter_three"
+                    android:layout_width="80dp"
+                    android:layout_height="40dp"
+                    android:text="反转"/>
+
+                <Button
+                    android:id="@+id/filter_four"
+                    android:layout_width="80dp"
+                    android:layout_height="40dp"
+                    android:text="素描" />
+                <Button
+                    android:id="@+id/filter_five"
+                    android:layout_width="80dp"
+                    android:layout_height="40dp"
+                    android:text="像素" />
+            </LinearLayout>
+
+
+
         </LinearLayout>
     </ScrollView>
     <LinearLayout
