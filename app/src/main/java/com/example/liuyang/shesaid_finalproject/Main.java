@@ -122,6 +122,7 @@ public class Main extends AppCompatActivity implements View.OnClickListener{
                     shesaidFragment = new Shesaid_fragment();
                     transaction.add(R.id.content, shesaidFragment);
                 } else {
+                    shesaidFragment.initSays();
                     transaction.show(shesaidFragment);
                 }
                 break;

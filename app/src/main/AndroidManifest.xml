@@ -34,14 +34,17 @@
         android:theme="@style/AppTheme">
 
         <!-- 允许network 非加密传输 🆙 那一条 -->
-        <activity android:name=".Welcome">
+        <activity android:name=".Welcome"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Login" />
+        <activity android:name=".Login"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
 
 
         <provider
@@ -79,7 +82,8 @@
 
         <activity android:name=".Main" />
 
-        <activity android:name=".Register" ></activity>
+        <activity android:name=".Register"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"></activity>
     </application>
 
 </manifest>

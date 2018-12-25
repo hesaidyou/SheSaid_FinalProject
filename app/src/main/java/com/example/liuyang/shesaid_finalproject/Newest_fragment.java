@@ -32,30 +32,29 @@ public class Newest_fragment extends Fragment implements SwipeAdapterView.onFlin
         SwipeAdapterView.OnItemClickListener{
 
     String [] headerIcons = {
-//            "http://www.5djiaren.com/uploads/2015-04/17-115301_29.jpg",
-//            "http://img1.dzwww.com:8080/tupian_pl/20160106/32/4152697013403556460.jpg",
-//            "http://c.hiphotos.baidu.com/zhidao/pic/item/72f082025aafa40f191362cfad64034f79f019ce.jpg",
-//            "http://img.article.pchome.net/new/w600/00/35/15/66/pic_lib/wm/122532981493137o3iegiyx.jpg",
-//            "http://img0.imgtn.bdimg.com/it/u=3382799710,1639843170&fm=21&gp=0.jpg",
-//            "http://i2.sinaimg.cn/travel/2014/0918/U7398P704DT20140918143217.jpg",
-//            "http://photo.l99.com/bigger/21/1415193165405_4sg3ds.jpg",
-//            "http://img.pconline.com.cn/images/upload/upc/tx/photoblog/1305/15/c2/20949108_20949108_1368599174341.jpg",
-//            "http://pic29.nipic.com/20130501/12558275_114724775130_2.jpg",
-//            "http://photo.l99.com/bigger/20/1415193157174_j2fa5b.jpg",
-//            "http://bmob-cdn-22994.b0.upaiyun.com/2018/12/25/0237097e761548d9bff9c2d181cfa9c9.jpg"
-            "http://bmob-cdn-22994.b0.upaiyun.com/2018/12/25/c643985332fd4f0389f2dd3962d0a9d8.jpeg"};
+            "http://bmob-cdn-22994.b0.upaiyun.com/2018/12/26/e8ef8b3940802abf80d5d3ada1a0cac3.jpg",
+            "http://bmob-cdn-22994.b0.upaiyun.com/2018/12/26/ee0f1db740b761568020918699de2554.png",
+            "http://bmob-cdn-22994.b0.upaiyun.com/2018/12/26/fff48d5740ae2ee48027dcee5153efcb.jpg",
+            "http://bmob-cdn-22994.b0.upaiyun.com/2018/12/26/7a6ff1ee4051ed4c804a95e17a59f8e5.jpg",
+            "http://bmob-cdn-22994.b0.upaiyun.com/2018/12/26/9bc5898540e682f080216277629f7357.jpg"};
+    String [] Icons = {
+            "http://bmob-cdn-22994.b0.upaiyun.com/2018/12/26/c005a21040cebfeb805d42b42a7bd5a8.jpg",
+            "http://bmob-cdn-22994.b0.upaiyun.com/2018/12/26/5b32089a40a33b2a80c8b25cf85fb844.jpg",
+            "http://bmob-cdn-22994.b0.upaiyun.com/2018/12/26/1522deb0405b4d47804c0c154b24ff0b.jpg",
+            "http://bmob-cdn-22994.b0.upaiyun.com/2018/12/26/fc46bcfa409208678039c92316bc8417.jpeg",
+            "http://bmob-cdn-22994.b0.upaiyun.com/2018/12/26/5b05af6d407eb87b807d6bef02dcb5cb.jpg"
+    };
+
+    String [] names = {"hesaidyou","QWL","Star","Tommy","cat"};
+
+    String [] times = {"2018年12月23日 10:09:25", "2018年12月24日 16:45:38", "2018年12月25日 11:23:45", "2018年12月25日 22:03:15","2018年12月25日 22:13:23"};
+
+    String [] contents = {"我天生不合群。", "人生的烦恼，多在于知道的太多，而做的太少。",
+            "人生似水岂无涯，浮云吹作雪，世味煮成茶", "Marray Christmas~","你我共创辉煌"};
 
 
-    String [] names = {"张三","龙淇伟","王五","小明"};
 
-    String [] times = {"2018年12月23日 10:09:25", "2018年12月23日 10:09:25", "2018年12月23日 10:09:25", "2018年12月23日 10:09:25"};
-
-    String [] contents = {"111111111111111111111111111111111111111111", "2222222222222222222222222222222222222222222222222222222222222",
-            "3333333333333333333333333333333333333333333333333333", "44444444444444444444444444444444444444444444444444444444444"};
-
-
-
-    Random ran = new Random();
+    //Random ran = new Random();
 
     private int cardWidth;
     private int cardHeight;
@@ -134,14 +133,14 @@ public class Newest_fragment extends Fragment implements SwipeAdapterView.onFlin
             protected List<Talent> doInBackground(Void... params) {
 
                 Talent talent;
-                for (int i = 0; i < 10; i++) {
+                for (int i = 0; i < 5; i++) {
                     //修改图片数量！！！！！
                     talent = new Talent();
-                    talent.headerIcon = headerIcons[0];
-                    talent.userIcon = headerIcons[0];
-                    talent.userName = names[ran.nextInt(names.length-1)];
-                    talent.timeofD = times[ran.nextInt(times.length-1)];
-                    talent.contentS = contents[ran.nextInt(contents.length-1)];
+                    talent.headerIcon = headerIcons[i];
+                    talent.userIcon = Icons[i];
+                    talent.userName = names[i];//ran.nextInt(names.length-1)
+                    talent.timeofD = times[i];
+                    talent.contentS = contents[i];
                     list.add(talent);
                 }
 
@@ -299,3 +298,18 @@ public class Newest_fragment extends Fragment implements SwipeAdapterView.onFlin
         public String contentS;
     }
 }
+
+
+
+
+//            "http://www.5djiaren.com/uploads/2015-04/17-115301_29.jpg",
+//            "http://img1.dzwww.com:8080/tupian_pl/20160106/32/4152697013403556460.jpg",
+//            "http://c.hiphotos.baidu.com/zhidao/pic/item/72f082025aafa40f191362cfad64034f79f019ce.jpg",
+//            "http://img.article.pchome.net/new/w600/00/35/15/66/pic_lib/wm/122532981493137o3iegiyx.jpg",
+//            "http://img0.imgtn.bdimg.com/it/u=3382799710,1639843170&fm=21&gp=0.jpg",
+//            "http://i2.sinaimg.cn/travel/2014/0918/U7398P704DT20140918143217.jpg",
+//            "http://photo.l99.com/bigger/21/1415193165405_4sg3ds.jpg",
+//            "http://img.pconline.com.cn/images/upload/upc/tx/photoblog/1305/15/c2/20949108_20949108_1368599174341.jpg",
+//            "http://pic29.nipic.com/20130501/12558275_114724775130_2.jpg",
+//            "http://photo.l99.com/bigger/20/1415193157174_j2fa5b.jpg",
+//            "http://bmob-cdn-22994.b0.upaiyun.com/2018/12/25/0237097e761548d9bff9c2d181cfa9c9.jpg"

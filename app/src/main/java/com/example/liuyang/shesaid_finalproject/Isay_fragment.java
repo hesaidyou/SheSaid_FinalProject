@@ -1,14 +1,13 @@
 package com.example.liuyang.shesaid_finalproject;
 
 import android.Manifest;
-import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.PointF;
 import android.os.Build;
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.util.Log;
@@ -17,7 +16,6 @@ import android.os.Message;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.content.FileProvider;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,27 +30,31 @@ import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.bumptech.glide.Glide;
-import com.example.liuyang.shesaid_finalproject.Tool.Filter;
 import com.example.liuyang.shesaid_finalproject.Tool.Utils;
 import com.example.liuyang.shesaid_finalproject.Tool.getPhotoFromPhotoAlbum;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.io.IOException;
 import java.util.List;
+import java.util.UUID;
 
 import cn.bmob.v3.Bmob;
 import cn.bmob.v3.datatype.BmobFile;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.SaveListener;
 import cn.bmob.v3.listener.UploadFileListener;
+import jp.wasabeef.glide.transformations.GrayscaleTransformation;
+import jp.wasabeef.glide.transformations.gpu.InvertFilterTransformation;
+import jp.wasabeef.glide.transformations.gpu.PixelationFilterTransformation;
+import jp.wasabeef.glide.transformations.gpu.SepiaFilterTransformation;
+import jp.wasabeef.glide.transformations.gpu.SketchFilterTransformation;
+import jp.wasabeef.glide.transformations.gpu.SwirlFilterTransformation;
 import pub.devrel.easypermissions.EasyPermissions;
 
-import android.os.Message;
 import android.os.Handler;
-
-import static android.support.v4.content.ContextCompat.checkSelfPermission;
 
 
 import static android.app.Activity.RESULT_OK;
@@ -77,19 +79,22 @@ public class Isay_fragment extends Fragment implements EasyPermissions.Permissio
     private Button fanzhuan;
     private Button sumiao;
     private Button xiangsu;
-
+    private Button xuanzhuan;
+    private Button change_yes;
 
     private ImageView picture;
     private File cameraSavePath;//拍照照片路径
     private Uri uri;
     private String[] permissions = {Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
 
-
     private AMapLocationClient locationClient = null;
     private AMapLocationClientOption locationOption = null;
     private TextView textView;
     private String[] strMsg;
 
+    //按钮上传照片与拍照切换
+    private int countTakephoto = 1;
+    private int countAlbum = 1;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -105,12 +110,12 @@ public class Isay_fragment extends Fragment implements EasyPermissions.Permissio
         textView = (TextView) view.findViewById(R.id.text_map);
         //Bmob.initialize(view.getContext(), "22dfe54dd26d5e6d6be9a1251adf95f9");
         parentActivity = (Main)getActivity();
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
-            if (checkSelfPermission(view.getContext(),Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                //申请权限
-                requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},0);
-            }
-        }
+//        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+//            if (checkSelfPermission(view.getContext(),Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+//                //申请权限
+//                requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},0);
+//            }
+//        }
 
         say_content = (EditText)view.findViewById(R.id.isay_content);
         takephoto = (Button)view.findViewById(R.id.isay_takephoto);
@@ -121,7 +126,6 @@ public class Isay_fragment extends Fragment implements EasyPermissions.Permissio
             @Override
             public void onClick(View v) {
                 //拍摄照片
-
                 Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
@@ -149,80 +153,8 @@ public class Isay_fragment extends Fragment implements EasyPermissions.Permissio
         location.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //自己位置
-                Location();
-                //未写完
-                // 将本地照片路径赋值给picPath
-                picPath = "/sdcard/MIUI/Gallery/cloud/owner/保存/1544520926879.jpeg";///sdcard/DCIM/Camera/IMG_20180807_201639.jpg
-
-
-
-
-
-
-
-                //上传选择照片
-                bmobFile = new BmobFile(new File(picPath));
-                bmobFile.uploadblock(new UploadFileListener() {
-                    @Override
-                    public void done(BmobException e) {
-                        if(e==null){
-                            picURL = bmobFile.getFileUrl();//--返回的上传文件的完整地址
-                            isUploaded = true;
-                            Toast.makeText(view.getContext(),"上传文件成功啦",Toast.LENGTH_SHORT).show();//
-                        }else{
-                            Toast.makeText(view.getContext(),"(╯﹏╰)上传文件失败了、、" + e.getMessage(),Toast.LENGTH_SHORT).show();
-                            Log.e("上传文件失败：" , e.getMessage());
-                        }
-                    }
-                    @Override
-                    public void onProgress(Integer value) {
-                        // 返回的上传进度（百分比）
-                        Toast.makeText(view.getContext(),"上传文件进度:"+ value.toString() + "%",Toast.LENGTH_SHORT).show();//
-                    }
-                });
-            }
-        });
-        send.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //从相册中选取照片
-                // 未写完
-                // 将本地照片路径赋值给picPath
-                picPath = "/sdcard/MIUI/Gallery/cloud/owner/保存/1544520926879.jpeg";
-
-
-
-
-
-
-                //上传选择照片
-                bmobFile = new BmobFile(new File(picPath));
-                bmobFile.uploadblock(new UploadFileListener() {
-                    @Override
-                    public void done(BmobException e) {
-                        if(e==null){
-                            picURL = bmobFile.getFileUrl();//--返回的上传文件的完整地址
-                            isUploaded = true;
-                            Toast.makeText(view.getContext(),"上传照片成功啦",Toast.LENGTH_SHORT).show();//
-                        }else{
-                            Toast.makeText(view.getContext(),"(╯﹏╰)上传文件失败了、、" + e.getMessage(),Toast.LENGTH_SHORT).show();
-                            Log.e("上传文件失败：" , e.getMessage());
-                        }
-                    }
-
-                    @Override
-                    public void onProgress(Integer value) {
-                        // 返回的上传进度（百分比）
-                        Toast.makeText(view.getContext(),"上传文件进度:"+ value.toString() + "%",Toast.LENGTH_SHORT).show();//
-                    }
-                });
-            }
-        });
-        location.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //自己位置
+            //自己位置
+            Location();
             }
         });
         send.setOnClickListener(new View.OnClickListener() {
@@ -254,6 +186,7 @@ public class Isay_fragment extends Fragment implements EasyPermissions.Permissio
                                     if(e==null){
                                         Toast.makeText(view.getContext(),"Say成功啦!",Toast.LENGTH_SHORT).show();
                                         Log.i("发布Say成功，返回objectId为：", s);
+
                                     }else{
                                         Toast.makeText(view.getContext(),"(╯﹏╰)发布失败了、、" + e.getMessage(),Toast.LENGTH_SHORT).show();// + e.getMessage()
                                         System.out.println(e.getMessage());
@@ -272,6 +205,7 @@ public class Isay_fragment extends Fragment implements EasyPermissions.Permissio
                 }else{//还未选择照片
                     Toast.makeText(view.getContext(),"选择一张你喜欢的照片吧~",Toast.LENGTH_SHORT).show();
                 }
+
             }
         });
 
@@ -281,53 +215,156 @@ public class Isay_fragment extends Fragment implements EasyPermissions.Permissio
         fanzhuan = (Button) view.findViewById(R.id.filter_three);
         sumiao = (Button) view.findViewById(R.id.filter_four);
         xiangsu = (Button) view.findViewById(R.id.filter_five);
+        xuanzhuan = (Button) view.findViewById(R.id.filter_six);
+        change_yes = (Button)view.findViewById(R.id.filter_yes);
 
-//        grey.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void
-// onClick(View v) {
-//                picture = Filter.ImageOperation(view.getContext(),photo , 1);
-//            }
-//        });
-//        wumo.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                System.out.println(photo);
-//                picture = Filter.ImageOperation(view.getContext(),photo , 2);
-//            }
-//        });
-//        fanzhuan.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                picture = Filter.ImageOperation(view.getContext(),photo , 3);
-//            }
-//        });
-//        sumiao.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                picture = Filter.ImageOperation(view.getContext(),photo , 4);
-//            }
-//        });
-//        xiangsu.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                picture = Filter.ImageOperation(view.getContext(),photo , 5);
-//            }
-//        });
+        change_yes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //缓存ImageView更改后照片
+                picture.buildDrawingCache();
+                //获取更改后照片
+                Bitmap bitmap = picture.getDrawingCache();
+                //保存路径
+                picPath = saveBitmap(v.getContext(),bitmap);
+
+                //上传选择照片
+                bmobFile = new BmobFile(new File(picPath));
+                bmobFile.uploadblock(new UploadFileListener() {
+                    @Override
+                    public void done(BmobException e) {
+                        if(e==null){
+                            picURL = bmobFile.getFileUrl();//--返回的上传文件的完整地址
+                            isUploaded = true;
+                            Toast.makeText(parentActivity,"上传文件成功啦",Toast.LENGTH_SHORT).show();//
+                        }else{
+                            Toast.makeText(parentActivity,"(╯﹏╰)上传文件失败了、、" + e.getMessage(),Toast.LENGTH_SHORT).show();
+                            Log.e("上传文件失败：" , e.getMessage());
+                        }
+                    }
+                    @Override
+                    public void onProgress(Integer value) {
+                        // 返回的上传进度（百分比）
+                        Toast.makeText(parentActivity,"上传文件进度:"+ value.toString() + "%",Toast.LENGTH_SHORT).show();//
+                    }
+                });
+                Toast.makeText(view.getContext(),"图片处理完成",Toast.LENGTH_SHORT).show();
+            }
+        });
+        grey.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //picture = Filter.ImageOperation(view.getContext(),picPath , 1);
+                Glide.with(v.getContext())
+                        .load(picPath)
+                        .bitmapTransform(new GrayscaleTransformation(v.getContext()))
+                        .into(picture);
+            }
+        });
+        wumo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Glide.with(v.getContext())
+                        .load(picPath)
+                        .bitmapTransform(new SepiaFilterTransformation(v.getContext(),1.0F))
+                        .into(picture);
+            }
+        });
+        fanzhuan.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Glide.with(v.getContext())
+                        .load(picPath)
+                        .bitmapTransform(new InvertFilterTransformation(v.getContext()))
+                        .into(picture);
+            }
+        });
+        sumiao.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Glide.with(v.getContext())
+                        .load(picPath)
+                        .bitmapTransform(new SketchFilterTransformation(v.getContext()))
+                        .into(picture);
+            }
+        });
+        xiangsu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Glide.with(v.getContext())
+                        .load(picPath)
+                        .bitmapTransform(new PixelationFilterTransformation(v.getContext(),20F))
+                        .into(picture);
+            }
+        });
+        xuanzhuan.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Glide.with(v.getContext())
+                        .load(picPath)
+                        .bitmapTransform(new SwirlFilterTransformation(v.getContext(),1.0F, 0.4F, new PointF(0.5F, 0.5F)))
+                        .into(picture);
+            }
+        });
 
         return view;
     }
 
+    private static final String SD_PATH = "/sdcard/Shesaid/";
+    private static final String IN_PATH = "/Shesaid/";
+
+    /**
+     * 随机生产文件名
+     *
+     * @return
+     */
+    private static String generateFileName() {
+        return UUID.randomUUID().toString();
+    }
+
+    //保存bitmap到本地
+    public static String saveBitmap(Context context, Bitmap mBitmap) {
+        String savePath;
+        File filePic;
+        if (Environment.getExternalStorageState().equals(
+                Environment.MEDIA_MOUNTED)) {
+            savePath = SD_PATH;
+        } else {
+            savePath = context.getApplicationContext().getFilesDir()
+                    .getAbsolutePath()
+                    + IN_PATH;
+        }
+        try {
+            filePic = new File(savePath + generateFileName() + ".jpg");
+            if (!filePic.exists()) {
+                filePic.getParentFile().mkdirs();
+                filePic.createNewFile();
+            }
+            FileOutputStream fos = new FileOutputStream(filePic);
+            mBitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+            fos.flush();
+            fos.close();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            return null;
+        }
+
+        return filePic.getAbsolutePath();
+    }
+
+
     private void initIsay() {
         say_content.setText("");
         picPath = "null";
+        Glide.with(this).load("").into(picture);
     }
 
     //获取权限
     private void getPermission() {
         if (EasyPermissions.hasPermissions(this.getActivity(), permissions)) {
             //已经打开权限
-            Toast.makeText(this.getActivity(), "已经申请相关权限", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this.getActivity(), "已经申请相关权限", Toast.LENGTH_SHORT).show();
         } else {
             //没有打开相关权限、申请权限
             EasyPermissions.requestPermissions(this, "需要获取您的相册、照相使用权限", 1, permissions);
@@ -336,7 +373,7 @@ public class Isay_fragment extends Fragment implements EasyPermissions.Permissio
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        String photoPath;
+        String photoPath = "";
         if (requestCode == 1 && resultCode == RESULT_OK) {
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
@@ -351,19 +388,43 @@ public class Isay_fragment extends Fragment implements EasyPermissions.Permissio
             Glide.with(this).load(photoPath).into(picture);
         }
 
+        picPath = photoPath;
+
+        //上传选择照片
+        bmobFile = new BmobFile(new File(picPath));
+        bmobFile.uploadblock(new UploadFileListener() {
+            @Override
+            public void done(BmobException e) {
+                if(e==null){
+                    picURL = bmobFile.getFileUrl();//--返回的上传文件的完整地址
+                    isUploaded = true;
+                    Toast.makeText(parentActivity,"上传文件成功啦",Toast.LENGTH_SHORT).show();//
+                }else{
+                    Toast.makeText(parentActivity,"(╯﹏╰)上传文件失败了、、" + e.getMessage(),Toast.LENGTH_SHORT).show();
+                    Log.e("上传文件失败：" , e.getMessage());
+                }
+            }
+            @Override
+            public void onProgress(Integer value) {
+                // 返回的上传进度（百分比）
+                Toast.makeText(parentActivity,"上传文件进度:"+ value.toString() + "%",Toast.LENGTH_SHORT).show();//
+            }
+        });
+
+
         super.onActivityResult(requestCode, resultCode, data);
     }
 
     //成功打开权限
     @Override
     public void onPermissionsGranted(int requestCode, @NonNull List<String> perms) {
-        Toast.makeText(this.getActivity(), "相关权限获取成功", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this.getActivity(), "相关权限获取成功", Toast.LENGTH_SHORT).show();
     }
 
     //用户未同意权限
     @Override
     public void onPermissionsDenied(int requestCode, @NonNull List<String> perms) {
-        Toast.makeText(this.getActivity(), "请同意相关权限，否则功能无法使用", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this.getActivity(), "请同意相关权限，否则功能无法使用", Toast.LENGTH_SHORT).show();
     }
 
     @Override

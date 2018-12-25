@@ -1,7 +1,9 @@
 package com.example.liuyang.shesaid_finalproject;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
@@ -21,6 +23,9 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.bumptech.glide.Glide;
+import com.example.liuyang.shesaid_finalproject.Tool.getPhotoFromPhotoAlbum;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -53,13 +58,12 @@ public class Register extends AppCompatActivity {
     //touxiang
     private BmobFile bmobFile;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
         userInfo = new UserInformation();
-
-
 
         //如果默认头像不存在，则创建
         String dffp = "/sdcard/Shesaid/default_icon.png";
@@ -102,23 +106,22 @@ public class Register extends AppCompatActivity {
         register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(isUploaded){
+            if(isUploaded){
 
-                    //用户名唯一逻辑未写
-
-                    if(TextUtils.isEmpty(user.getText()) || TextUtils.isEmpty(password.getText()) ||
-                            TextUtils.isEmpty(passwordconf.getText()) ||
-                            (sex.getCheckedRadioButtonId()!=male.getId() && sex.getCheckedRadioButtonId()!=female.getId())){
-                        Toast.makeText(v.getContext(),"请填写完整信息",Toast.LENGTH_SHORT).show();
-                    }else if(!password.getText().toString().equals(passwordconf.getText().toString())){
-                        Toast.makeText(v.getContext(),"请两次输入相同密码",Toast.LENGTH_SHORT).show();
-                    } else{
-                        iconPath = bmobFile.getFileUrl();
-                        createUser(v);
-                    }
-                }else{
-                    Toast.makeText(v.getContext(),"请您等待头像上传完成",Toast.LENGTH_SHORT).show();
+                //用户名唯一逻辑未写
+                if(TextUtils.isEmpty(user.getText()) || TextUtils.isEmpty(password.getText()) ||
+                        TextUtils.isEmpty(passwordconf.getText()) ||
+                        (sex.getCheckedRadioButtonId()!=male.getId() && sex.getCheckedRadioButtonId()!=female.getId())){
+                    Toast.makeText(v.getContext(),"请填写完整信息",Toast.LENGTH_SHORT).show();
+                }else if(!password.getText().toString().equals(passwordconf.getText().toString())){
+                    Toast.makeText(v.getContext(),"请两次输入相同密码",Toast.LENGTH_SHORT).show();
+                } else{
+                    iconPath = bmobFile.getFileUrl();
+                    createUser(v);
                 }
+            }else{
+                Toast.makeText(v.getContext(),"请您等待头像上传完成",Toast.LENGTH_SHORT).show();
+            }
 
             }
         });
@@ -126,41 +129,56 @@ public class Register extends AppCompatActivity {
         sex.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-                if(checkedId == male.getId()){
-                    userSex = "男";
-                }else if(checkedId == female.getId()){
-                    userSex = "女";
-                }
+            if(checkedId == male.getId()){
+                userSex = "男";
+            }else if(checkedId == female.getId()){
+                userSex = "女";
+            }
             }
         });
 
         select.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
-                //选择相册图片
-                //在（ImageView）icon上展示图片，把路径储存到iconPath中
+            //选择相册图片
+            //在（ImageView）icon上展示图片，把路径储存到iconPath中
+            localIconPath = "";
+            Intent intent = new Intent();
+            intent.setAction(Intent.ACTION_PICK);
+            intent.setType("image/*");
+            startActivityForResult(intent, 2);
 
-                //localIconPath = "";
+            }
+        });
+    }
 
-                //上传图片
-                bmobFile = new BmobFile(new File(localIconPath));
-                bmobFile.upload(new UploadFileListener() {
-                    @Override
-                    public void done(BmobException e) {
-                        if(e==null){
-                            isUploaded = true;
-                            //bmobFile.getFileUrl()--返回的上传文件的完整地址
-                            Toast.makeText(v.getContext(),"上传文件成功:",Toast.LENGTH_SHORT).show();
-                        }else{
-                            Toast.makeText(v.getContext(),"上传文件失败:",Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                    @Override
-                    public void onProgress(Integer value) {
-                        //super.onProgress(value);
-                    }
-                });
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        String photoPath = "";
+        if (requestCode == 2 && resultCode == RESULT_OK) {
+            photoPath = getPhotoFromPhotoAlbum.getRealPathFromUri(this, data.getData());
+            Glide.with(this).load(photoPath).into(icon);
+        }
 
+        localIconPath = photoPath;
+        super.onActivityResult(requestCode, resultCode, data);
+        final Context context = this;
+        //上传图片
+        bmobFile = new BmobFile(new File(localIconPath));
+        bmobFile.upload(new UploadFileListener() {
+            @Override
+            public void done(BmobException e) {
+                if(e==null){
+                    isUploaded = true;
+                    //bmobFile.getFileUrl()--返回的上传文件的完整地址
+                    Toast.makeText(context,"上传头像成功啦！",Toast.LENGTH_SHORT).show();
+                }else{
+                    Toast.makeText(context,"上传头像失败了sad",Toast.LENGTH_SHORT).show();
+                }
+            }
+            @Override
+            public void onProgress(Integer value) {
+                //super.onProgress(value);
             }
         });
     }

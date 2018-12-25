@@ -40,6 +40,7 @@ public class Shesaid_fragment extends Fragment {
     //private InAdapter adapter;
     private ShesaidAdapter adapter;
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -55,22 +56,7 @@ public class Shesaid_fragment extends Fragment {
         if(adapter!=null){
             adapter.notifyDataSetChanged();
         }
-        BmobQuery<Say> query = new BmobQuery<Say>();
-        //查询不是自己的Say
-        //query.addWhereNotEqualTo("userName",Login.correntUser.getUser());
-        query.addWhereExists("userName");
-        query.findObjects(new FindListener<Say>() {
-            @Override
-            public void done(List<Say> list, BmobException e) {
-                if(e==null){
-                    for(Say say:list){
-                        sayList.add(say);
-                    }
-                }else{
-                    //Toast.makeText(view.getContext(),"网络错误："+e.getMessage(),Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
+
         //test
 //        List<Say> list = new ArrayList<Say>();
 //        Say default_say = new Say();
@@ -85,9 +71,9 @@ public class Shesaid_fragment extends Fragment {
         recyclerView = (RecyclerView)view.findViewById(R.id.shesaid_recyclerview);
         linearLayoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(linearLayoutManager);
-        adapter = new ShesaidAdapter(sayList);//sayList
-        recyclerView.setAdapter(adapter);
-        //initSays(view);
+
+        initSays();
+
 
         return view;
     }
@@ -95,7 +81,36 @@ public class Shesaid_fragment extends Fragment {
     public void upload(){
 
     }
-    public void initSays(View view){
+    public void initSays(){
+        if(sayList.size()!=0){
+            sayList.clear();
+        }
+        BmobQuery<Say> query = new BmobQuery<Say>();
+        //查询不是自己的Say
+        //query.addWhereNotEqualTo("userName",Login.correntUser.getUser());
+        query.addWhereExists("userName");
+        query.findObjects(new FindListener<Say>() {
+            @Override
+            public void done(List<Say> list, BmobException e) {
+            if(e==null){
+                for(int i = list.size()-1;i>=0;i--){
+                    sayList.add(list.get(i));
+                    adapter = new ShesaidAdapter(sayList);//sayList
+                    recyclerView.setAdapter(adapter);
+                    adapter.notifyDataSetChanged();
+                }
+//                for(Say say:list){
+//                    sayList.add(say);
+//                    adapter = new ShesaidAdapter(sayList);//sayList
+//                    recyclerView.setAdapter(adapter);
+//                    adapter.notifyDataSetChanged();
+//                }
+            }else{
+                //Toast.makeText(view.getContext(),"网络错误："+e.getMessage(),Toast.LENGTH_SHORT).show();
+            }
+            }
+        });
+
 //        Bmob.initialize(view.getContext(), "22dfe54dd26d5e6d6be9a1251adf95f9");
 //        new AsyncTask<Void, Void, List<Say>>() {
 //            @Override
