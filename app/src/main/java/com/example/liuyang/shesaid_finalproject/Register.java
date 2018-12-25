@@ -44,7 +44,7 @@ public class Register extends AppCompatActivity {
     private RadioButton female;
     private ImageView icon;
     private Button select;
-    private UserInfo userInfo;
+    private UserInformation userInfo;
 
     private String localIconPath;
     private String iconPath = "";
@@ -57,7 +57,7 @@ public class Register extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-        userInfo = new UserInfo();
+        userInfo = new UserInformation();
 
 
 

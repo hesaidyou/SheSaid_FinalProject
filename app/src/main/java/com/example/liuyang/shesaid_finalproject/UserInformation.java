@@ -2,7 +2,7 @@ package com.example.liuyang.shesaid_finalproject;
 
 import cn.bmob.v3.BmobObject;
 
-public class UserInfo extends BmobObject {
+public class UserInformation extends BmobObject {
     private String user;
     private String password;
     private String sex;

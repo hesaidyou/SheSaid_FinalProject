@@ -33,9 +33,9 @@ public class Login extends AppCompatActivity {
     private Button register;
     private EditText user;
     private EditText password;
-    public static UserInfo correntUser = new UserInfo();
+    public static UserInformation correntUser = new UserInformation();
 
-    public UserInfo getCorrentUser() {
+    public UserInformation getCorrentUser() {
         return correntUser;
     }
 
@@ -68,18 +68,18 @@ public class Login extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(user.getText().toString().length()!=0 && password.getText().toString().length()!=0){
-                    BmobQuery<UserInfo> query = new BmobQuery<UserInfo>();
+                    BmobQuery<UserInformation> query = new BmobQuery<UserInformation>();
                     query.addWhereEqualTo("user",user.getText().toString());
 
-                    query.findObjects(new FindListener<UserInfo>() {
+                    query.findObjects(new FindListener<UserInformation>() {
 
                         @Override
-                        public void done(List<UserInfo> list, BmobException e) {
+                        public void done(List<UserInformation> list, BmobException e) {
                             if(list.isEmpty()){
                                 Toast.makeText(Login.this,"用户名或密码错误",Toast.LENGTH_SHORT).show();
                             }else{
                                 if(e==null){
-                                    UserInfo userinfo = list.get(0);
+                                    UserInformation userinfo = list.get(0);
                                     //储存用户信息
                                     correntUser = userinfo;
                                     //for(UserInfo userinfo:list){}

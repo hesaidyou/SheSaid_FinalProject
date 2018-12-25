@@ -73,11 +73,13 @@
                 <data android:scheme="tencent1105602574" /> <!-- 开放平台获取的APPID -->
             </intent-filter>
         </activity>
+
         <activity android:name="com.tencent.connect.common.AssistActivity"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
 
         <activity android:name=".Main" />
-        <activity android:name=".Register"></activity>
+
+        <activity android:name=".Register" ></activity>
     </application>
 
 </manifest>

@@ -55,7 +55,6 @@ import android.os.Handler;
 import static android.support.v4.content.ContextCompat.checkSelfPermission;
 
 
-public class Isay_fragment extends Fragment {
 import static android.app.Activity.RESULT_OK;
 
 public class Isay_fragment extends Fragment implements EasyPermissions.PermissionCallbacks , AMapLocationListener {
