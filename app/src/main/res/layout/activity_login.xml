@@ -21,7 +21,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="Gym Club"
+        android:text="She Said"
         android:textColor="#000000"
         android:textSize="36sp" />
 
@@ -37,12 +37,13 @@
         android:id="@+id/login_email_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="邮箱"/>
+        android:hint="用户名"/>
 
     <EditText
         android:id="@+id/login_password_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:inputType="textPassword"
         android:hint="密码"
         android:singleLine="true" />
 

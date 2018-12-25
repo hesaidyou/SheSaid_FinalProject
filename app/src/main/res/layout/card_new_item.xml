@@ -65,7 +65,6 @@
             android:id="@+id/contentS"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:singleLine="true"
             android:text="contentS"
             android:textColor="#565656"
             android:textSize="16sp" />

@@ -13,6 +13,12 @@ public class Welcome extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
+
+        //文件处理自定义工具
+        FileOperator fileOperator = new FileOperator();
+        //生成默认路径
+        fileOperator.createDefaultFilePath();
+
         enter = (Button)findViewById(R.id.welcome_enter);
         enter.setOnClickListener(new View.OnClickListener() {
             @Override

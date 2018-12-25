@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/colourful9"
     android:orientation="vertical">
 
     <TextView
@@ -20,18 +21,19 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <TextView
+            <EditText
+                android:id="@+id/isay_content"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="说点什么吧.."
                 android:text=""
                 android:textSize="16dp" />
+
             <ImageView
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_gravity="bottom"
                  />
-
         </LinearLayout>
     </ScrollView>
     <LinearLayout

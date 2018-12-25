@@ -3,6 +3,7 @@ package com.example.liuyang.shesaid_finalproject;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.graphics.Color;
+import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -45,12 +46,19 @@ public class Main extends AppCompatActivity implements View.OnClickListener{
             getSupportActionBar().hide();
         }
         setContentView(R.layout.activity_main);
+
+        //强制允许主线程操作网络
+        if (android.os.Build.VERSION.SDK_INT > 9) {
+            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+            StrictMode.setThreadPolicy(policy);
+        }
+
         initViews();
         fragmentManager = getFragmentManager();
         setSelectTab(0);
     }
 
-    private void initViews() {
+    public void initViews() {
         newestView = findViewById(R.id.newestlayout);
         isayView = findViewById(R.id.isaylayout);
         shesaidView = findViewById(R.id.shesaidlayout);
@@ -78,7 +86,7 @@ public class Main extends AppCompatActivity implements View.OnClickListener{
         bottomTabs.add(myselfView);
     }
 
-    private void setSelectTab(int index) {
+    public void setSelectTab(int index) {
         clearSelection();
         // 开启一个Fragment事务
         FragmentTransaction transaction = fragmentManager.beginTransaction();
@@ -153,7 +161,7 @@ public class Main extends AppCompatActivity implements View.OnClickListener{
         }
     }
 
-    private void clearSelection() {
+    public void clearSelection() {
         mainImage.setImageResource(R.drawable.main_main);
         mainText.setTextColor(Color.parseColor("#82858b"));
         coachImage.setImageResource(R.drawable.main_coach);
@@ -164,7 +172,7 @@ public class Main extends AppCompatActivity implements View.OnClickListener{
         myselfText.setTextColor(Color.parseColor("#82858b"));
     }
 
-    private void hideFragments(FragmentTransaction transaction) {
+    public void hideFragments(FragmentTransaction transaction) {
         if (newestFragment != null) {
             transaction.hide(newestFragment);
         }

@@ -23,25 +23,30 @@ import java.util.List;
 import java.util.Random;
 
 import cn.bmob.v3.Bmob;
+import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.SaveListener;
 
 public class Newest_fragment extends Fragment implements SwipeAdapterView.onFlingListener,
         SwipeAdapterView.OnItemClickListener{
 
-    String [] headerIcons = {"http://www.5djiaren.com/uploads/2015-04/17-115301_29.jpg",
-            "http://img1.dzwww.com:8080/tupian_pl/20160106/32/4152697013403556460.jpg",
-            "http://c.hiphotos.baidu.com/zhidao/pic/item/72f082025aafa40f191362cfad64034f79f019ce.jpg",
-            "http://img.article.pchome.net/new/w600/00/35/15/66/pic_lib/wm/122532981493137o3iegiyx.jpg",
-            "http://img0.imgtn.bdimg.com/it/u=3382799710,1639843170&fm=21&gp=0.jpg",
-            "http://i2.sinaimg.cn/travel/2014/0918/U7398P704DT20140918143217.jpg",
-            "http://photo.l99.com/bigger/21/1415193165405_4sg3ds.jpg",
-            "http://img.pconline.com.cn/images/upload/upc/tx/photoblog/1305/15/c2/20949108_20949108_1368599174341.jpg",
-            "http://pic29.nipic.com/20130501/12558275_114724775130_2.jpg",
-            "http://photo.l99.com/bigger/20/1415193157174_j2fa5b.jpg"};
+    String [] headerIcons = {
+//            "http://www.5djiaren.com/uploads/2015-04/17-115301_29.jpg",
+//            "http://img1.dzwww.com:8080/tupian_pl/20160106/32/4152697013403556460.jpg",
+//            "http://c.hiphotos.baidu.com/zhidao/pic/item/72f082025aafa40f191362cfad64034f79f019ce.jpg",
+//            "http://img.article.pchome.net/new/w600/00/35/15/66/pic_lib/wm/122532981493137o3iegiyx.jpg",
+//            "http://img0.imgtn.bdimg.com/it/u=3382799710,1639843170&fm=21&gp=0.jpg",
+//            "http://i2.sinaimg.cn/travel/2014/0918/U7398P704DT20140918143217.jpg",
+//            "http://photo.l99.com/bigger/21/1415193165405_4sg3ds.jpg",
+//            "http://img.pconline.com.cn/images/upload/upc/tx/photoblog/1305/15/c2/20949108_20949108_1368599174341.jpg",
+//            "http://pic29.nipic.com/20130501/12558275_114724775130_2.jpg",
+//            "http://photo.l99.com/bigger/20/1415193157174_j2fa5b.jpg",
+//            "http://bmob-cdn-22994.b0.upaiyun.com/2018/12/25/0237097e761548d9bff9c2d181cfa9c9.jpg"
+            "http://bmob-cdn-22994.b0.upaiyun.com/2018/12/25/c643985332fd4f0389f2dd3962d0a9d8.jpeg"};
 
 
-    String [] names = {"张三","李四","王五","小明"};
+    String [] names = {"张三","龙淇伟","王五","小明"};
 
     String [] times = {"2018年12月23日 10:09:25", "2018年12月23日 10:09:25", "2018年12月23日 10:09:25", "2018年12月23日 10:09:25"};
 
@@ -66,18 +71,14 @@ public class Newest_fragment extends Fragment implements SwipeAdapterView.onFlin
                 container, false);
         //在fragment中获取主程序activity
         Activity a = this.getActivity();
-        Bmob.initialize(newestLayout.getContext(), "22dfe54dd26d5e6d6be9a1251adf95f9");
-        uploadtest(newestLayout,a);
-
+        //Bmob.initialize(newestLayout.getContext(), "22dfe54dd26d5e6d6be9a1251adf95f9");
 
         initView(newestLayout);
         loadData();
 
         return newestLayout;
     }
-    public void uploadtest(final View newestLayout, final Activity a){
 
-    }
 
     private void initView(View newestLayout) {
         DisplayMetrics dm = getResources().getDisplayMetrics();
@@ -126,21 +127,46 @@ public class Newest_fragment extends Fragment implements SwipeAdapterView.onFlin
 
     }
 
+    private ArrayList<Talent> list = new ArrayList<>(10);
     private void loadData() {
         new AsyncTask<Void, Void, List<Talent>>() {
             @Override
             protected List<Talent> doInBackground(Void... params) {
-                ArrayList<Talent> list = new ArrayList<>(10);
+
                 Talent talent;
                 for (int i = 0; i < 10; i++) {
+                    //修改图片数量！！！！！
                     talent = new Talent();
-                    talent.headerIcon = headerIcons[i];
-                    talent.userIcon = headerIcons[i];
+                    talent.headerIcon = headerIcons[0];
+                    talent.userIcon = headerIcons[0];
                     talent.userName = names[ran.nextInt(names.length-1)];
                     talent.timeofD = times[ran.nextInt(times.length-1)];
                     talent.contentS = contents[ran.nextInt(contents.length-1)];
                     list.add(talent);
                 }
+
+//                BmobQuery<Say> query = new BmobQuery<Say>();
+//                query.addWhereExists("userName");
+//                query.findObjects(new FindListener<Say>() {
+//                    @Override
+//                    public void done(List<Say> query_list, BmobException e) {
+//                        if(e==null){
+//                            for(Say say:query_list){
+//                                Talent talent1 = new Talent();
+//                                talent1.headerIcon = say.getIcon();
+//                                talent1.userIcon = say.getUserIcon();
+//                                talent1.contentS = say.getContent();
+//                                talent1.timeofD = say.getTime();
+//                                talent1.userName = say.getUserName();
+//                                list.add(talent1);
+//                            }
+//                        }else{
+//                            //Toast.makeText(view.getContext(),"网络错误："+e.getMessage(),Toast.LENGTH_SHORT).show();
+//                        }
+//                    }
+//                });
+
+
                 return list;
             }
 
@@ -152,7 +178,7 @@ public class Newest_fragment extends Fragment implements SwipeAdapterView.onFlin
         }.execute();
     }
 
-    private class InnerAdapter extends BaseAdapter implements View.OnClickListener {
+    class InnerAdapter extends BaseAdapter implements View.OnClickListener {
 
         ArrayList<Talent> objs;
 
@@ -184,7 +210,6 @@ public class Newest_fragment extends Fragment implements SwipeAdapterView.onFlin
                 notifyDataSetChanged();
             }
         }
-
 
         @Override
         public int getCount() {

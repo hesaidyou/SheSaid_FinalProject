@@ -7,15 +7,15 @@ public class Say extends BmobObject{
     private String userIcon;
     private String userName;
     private String time;
-    private int id = 0;
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
+//    private int id = 0;
+//
+//    public int getId() {
+//        return id;
+//    }
+//
+//    public void setId(int id) {
+//        this.id = id;
+//    }
 
     public String getIcon() {
         return Icon;
